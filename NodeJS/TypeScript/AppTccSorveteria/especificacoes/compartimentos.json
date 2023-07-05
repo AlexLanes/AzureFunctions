@@ -1,0 +1,1026 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Compartimentos",
+        "description": "Expõe os dados da Coleção dos Compartimentos",
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "https://apim-apptccsorveteria.azure-api.net/api/v1/compartimentos"
+        }
+    ],
+    "paths": {
+        "/": {
+            "get": {
+                "summary": "Obter compartimentos",
+                "description": "Obter os compartimentos",
+                "operationId": "obter-compartimentos",
+                "parameters": [
+                    {
+                        "name": "tipo",
+                        "in": "query",
+                        "description": "Filtro pelo tipo do compartimento",
+                        "required": false,
+                        "schema": {
+                            "pattern": "^([\\wç]+,)*[\\wç]+$",
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/df-resultado-compartimento"
+                                },
+                                "example": {
+                                    "sucesso": true,
+                                    "mensagem": "1 item(ns) obtido(s)",
+                                    "resultados": [
+                                        {
+                                            "_id": "copo_200",
+                                            "preco": 4,
+                                            "estoque": true,
+                                            "url_imagem": "",
+                                            "tipo": "copo",
+                                            "capacidade": 200,
+                                            "qtd_adicionais": 3,
+                                            "qtd_sabores": 2
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+					"401": {
+						"description": "Apikey inválido ou não informado",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/df-resultado-vazio"
+								},
+								"example": {
+									"sucesso": false,
+									"mensagem": "Access denied due to missing subscription key. Make sure to include subscription key when making requests to an API.",
+									"resultados": []
+								}
+							}
+						}
+					},
+                    "404": {
+                        "description": "Não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/df-resultado-vazio"
+                                },
+								"example": {
+                                    "sucesso": false,
+                                    "mensagem": "Item não encontrado",
+                                    "resultados": []
+                                }
+                            }
+                        }
+                    },
+					"406": {
+						"description": "Formato requisitado de resposta não aceito",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/df-resultado-vazio"
+								},
+								"example": {
+                                    "sucesso": false,
+                                    "mensagem": "Accept '{Accept}' não aceito",
+                                    "resultados": []
+                                }
+							}
+						}
+					},
+                    "500": {
+                        "description": "Erro interno",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/df-resultado-vazio"
+                                },
+                                "example": {
+                                    "sucesso": false,
+                                    "mensagem": "Erro interno. ${erro}",
+                                    "resultados": []
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Criar compartimento",
+                "description": "Criar um compartimento",
+                "operationId": "criar-compartimento",
+                "requestBody": {
+                    "description": "Corpo do compartimento. Não é possível customizar o _id",
+					"required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ref-compartimento"
+                            },
+                            "example": {
+                                "tipo": "copo",
+                                "capacidade": 200,
+                                "preco": 4,
+                                "qtd_adicionais": 3,
+                                "qtd_sabores": 2,
+                                "estoque": true,
+                                "url_imagem": ""
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/df-resultado-compartimento"
+                                },
+                                "example": {
+                                    "sucesso": true,
+                                    "mensagem": "Item criado com sucesso",
+                                    "resultados": [
+                                        {
+                                            "_id": "copo_200",
+                                            "tipo": "copo",
+                                            "capacidade": 200,
+                                            "preco": 4,
+                                            "qtd_adicionais": 3,
+                                            "qtd_sabores": 2,
+                                            "estoque": true,
+                                            "url_imagem": ""
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Request inválido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/df-resultado-vazio"
+                                },
+                                "example": {
+                                    "sucesso": false,
+                                    "mensagem": "${Mensagem do erro}",
+                                    "resultados": []
+                                }
+                            }
+                        }
+                    },
+					"401": {
+						"description": "Apikey inválido ou não informado",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/df-resultado-vazio"
+								},
+								"example": {
+									"sucesso": false,
+									"mensagem": "Access denied due to missing subscription key. Make sure to include subscription key when making requests to an API.",
+									"resultados": []
+								}
+							}
+						}
+					},
+					"406": {
+						"description": "Formato requisitado de resposta não aceito",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/df-resultado-vazio"
+								},
+								"example": {
+                                    "sucesso": false,
+                                    "mensagem": "Accept '{Accept}' não aceito",
+                                    "resultados": []
+                                }
+							}
+						}
+					},
+                    "409": {
+                        "description": "Compartimento já existente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/df-resultado-vazio"
+                                },
+                                "example": {
+                                    "sucesso": false,
+                                    "mensagem": "Item já existente na base de dados",
+                                    "resultados": []
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/df-resultado-vazio"
+                                },
+                                "example": {
+                                    "sucesso": false,
+                                    "mensagem": "Erro interno. ${erro}",
+                                    "resultados": []
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/{id}": {
+            "get": {
+                "summary": "Obter compartimento",
+                "description": "Obter compartimento",
+                "operationId": "obter-compartimento",
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "description": "Metadata do id do documento na collection",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/df-resultado-compartimento"
+                                },
+                                "example": {
+                                    "sucesso": true,
+                                    "mensagem": "1 item(ns) obtido(s)",
+                                    "resultados": [
+                                        {
+                                            "_id": "copo_200",
+                                            "preco": 4,
+                                            "estoque": true,
+                                            "url_imagem": "",
+                                            "tipo": "copo",
+                                            "capacidade": 200,
+                                            "qtd_adicionais": 3,
+                                            "qtd_sabores": 2
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+					"401": {
+						"description": "Apikey inválido ou não informado",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/df-resultado-vazio"
+								},
+								"example": {
+									"sucesso": false,
+									"mensagem": "Access denied due to missing subscription key. Make sure to include subscription key when making requests to an API.",
+									"resultados": []
+								}
+							}
+						}
+					},
+                    "404": {
+                        "description": "Não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/df-resultado-vazio"
+                                },
+								"example": {
+                                    "sucesso": false,
+                                    "mensagem": "Item não encontrado",
+                                    "resultados": []
+                                }
+                            }
+                        }
+                    },
+					"406": {
+						"description": "Formato requisitado de resposta não aceito",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/df-resultado-vazio"
+								},
+								"example": {
+                                    "sucesso": false,
+                                    "mensagem": "Accept '{Accept}' não aceito",
+                                    "resultados": []
+                                }
+							}
+						}
+					},
+                    "500": {
+                        "description": "Erro interno",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/df-resultado-vazio"
+                                },
+                                "example": {
+                                    "sucesso": false,
+                                    "mensagem": "Erro interno. ${erro}",
+                                    "resultados": []
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Apagar compartimento",
+                "description": "Apagar um compartimento",
+                "operationId": "apagar-compartimento",
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "description": "Metadata do id do documento na collection",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/df-resultado-vazio"
+                                },
+                                "example": {
+                                    "sucesso": true,
+                                    "mensagem": "Item apagado com sucesso",
+                                    "resultados": []
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Apikey inválido ou não informado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/df-resultado-vazio"
+                                },
+                                "example": {
+                                    "sucesso": false,
+                                    "mensagem": "Access denied due to missing subscription key. Make sure to include subscription key when making requests to an API.",
+                                    "resultados": []
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/df-resultado-vazio"
+                                },
+                                "example": {
+                                    "sucesso": false,
+                                    "mensagem": "Item não encontrado",
+                                    "resultados": []
+                                }
+                            }
+                        }
+                    },
+                    "406": {
+                        "description": "Formato requisitado de resposta não aceito",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/df-resultado-vazio"
+                                },
+                                "example": {
+                                    "sucesso": false,
+                                    "mensagem": "Accept '{Accept}' não aceito",
+                                    "resultados": []
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/df-resultado-vazio"
+                                },
+                                "example": {
+                                    "sucesso": false,
+                                    "mensagem": "Erro interno. ${erro}",
+                                    "resultados": []
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "Atualizar compartimento",
+                "description": "Atualizar um compartimento",
+                "operationId": "atualizar-compartimento",
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "description": "Metadata do id do documento na collection",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }],
+                "requestBody": {
+                    "description": "Corpo do compartimento. Não é necessário informar o _id",
+					"required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ref-compartimento"
+                            },
+                            "example": {
+                                "tipo": "barca",
+                                "capacidade": 1000,
+                                "preco": 20,
+                                "qtd_adicionais": 3,
+                                "qtd_sabores": 2,
+                                "estoque": true,
+                                "url_imagem": ""
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/df-resultado-compartimento"
+                                },
+                                "example": {
+                                    "sucesso": true,
+                                    "mensagem": "Item atualizado com sucesso",
+                                    "resultados": [
+                                        {
+                                            "_id": "barca_1000",
+                                            "tipo": "barca",
+                                            "capacidade": 1000,
+                                            "preco": 20,
+                                            "qtd_adicionais": 3,
+                                            "qtd_sabores": 2,
+                                            "estoque": true,
+                                            "url_imagem": ""
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Request inválido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/df-resultado-vazio"
+                                },
+                                "example": {
+                                    "sucesso": false,
+                                    "mensagem": "${Mensagem do erro}",
+                                    "resultados": []
+                                }
+                            }
+                        }
+                    },
+					"401": {
+						"description": "Apikey inválido ou não informado",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/df-resultado-vazio"
+								},
+								"example": {
+									"sucesso": false,
+									"mensagem": "Access denied due to missing subscription key. Make sure to include subscription key when making requests to an API.",
+									"resultados": []
+								}
+							}
+						}
+					},
+                    "404": {
+                        "description": "Não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/df-resultado-vazio"
+                                },
+                                "example": {
+                                    "sucesso": false,
+                                    "mensagem": "Item não encontrado",
+                                    "resultados": []
+                                }
+                            }
+                        }
+                    },
+					"406": {
+						"description": "Formato requisitado de resposta não aceito",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/df-resultado-vazio"
+								},
+								"example": {
+                                    "sucesso": false,
+                                    "mensagem": "Accept '{Accept}' não aceito",
+                                    "resultados": []
+                                }
+							}
+						}
+					},
+                    "500": {
+                        "description": "Erro interno",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/df-resultado-vazio"
+                                },
+                                "example": {
+                                    "sucesso": false,
+                                    "mensagem": "Erro interno. ${erro}",
+                                    "resultados": []
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/imagens": {
+            "get": {
+                "tags": [
+                    "imagens"
+                ],
+                "summary": "Obter imagens compartimento",
+                "description": "Obter as urls das imagens dos compartimentos",
+                "operationId": "obter-imagens-compartimento",
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/df-resultado-imagem"
+                                },
+                                "example": {
+                                    "sucesso": true,
+                                    "mensagem": "1 imagem(ns) obtida(s)",
+                                    "resultados": [
+                                        {
+                                            "nome": "morango.jpg",
+                                            "url_imagem": "https://firebasestorage.googleapis.com/v0/b/apptcccompartimentoria.appspot.com/o/compartimentos%2Fmorango.jpg?alt=media&token=d111581f-bbc6-4abf-acaa-b2ecf3a73ce3"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+					"401": {
+						"description": "Apikey inválido ou não informado",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/df-resultado-vazio"
+								},
+								"example": {
+									"sucesso": false,
+									"mensagem": "Access denied due to missing subscription key. Make sure to include subscription key when making requests to an API.",
+									"resultados": []
+								}
+							}
+						}
+					},
+                    "404": {
+                        "description": "Imagem não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/df-resultado-vazio"
+                                },
+                                "example": {
+                                    "sucesso": false,
+                                    "mensagem": "Imagem não encontrada",
+                                    "resultados": []
+                                }
+                            }
+                        }
+                    },
+					"406": {
+						"description": "Formato requisitado de resposta não aceito",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/df-resultado-vazio"
+								},
+								"example": {
+                                    "sucesso": false,
+                                    "mensagem": "Accept '{Accept}' não aceito",
+                                    "resultados": []
+                                }
+							}
+						}
+					},
+                    "500": {
+                        "description": "Erro interno",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/df-resultado-vazio"
+                                },
+                                "example": {
+                                    "sucesso": false,
+                                    "mensagem": "Erro interno. ${erro}",
+                                    "resultados": []
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "imagens"
+                ],
+                "summary": "Upload imagem compartimento",
+                "description": "Upload de imagem de compartimento",
+                "operationId": "upload-imagem-compartimento",
+                "requestBody": {
+                    "description": "Campo imagem com o anexo e, opcionalmente, o nome",
+					"required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [ "imagem" ],
+                                "properties": {
+                                    "imagem": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "nome": {
+                                        "type": "string",
+                                        "pattern": "^[\\w.]{3,}$"
+                                    }
+                                },
+                                "additionalProperties": false
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/df-resultado-imagem"
+                                },
+                                "example": {
+                                    "sucesso": true,
+                                    "mensagem": "Upload da imagem realizado com sucesso",
+                                    "resultados": [
+                                        {
+                                            "nome": "morango.jpg",
+                                            "url_imagem": "https://firebasestorage.googleapis.com/v0/b/apptcccompartimentoria.appspot.com/o/compartimentos%2Fmorango.jpg?alt=media&token=b8898718-b0bd-4799-9ef6-47a932837396"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Request inválido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/df-resultado-vazio"
+                                },
+                                "example": {
+                                    "sucesso": false,
+                                    "mensagem": "${Mensagem do erro}",
+                                    "resultados": []
+                                }
+                            }
+                        }
+                    },
+					"401": {
+						"description": "Apikey inválido ou não informado",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/df-resultado-vazio"
+								},
+								"example": {
+									"sucesso": false,
+									"mensagem": "Access denied due to missing subscription key. Make sure to include subscription key when making requests to an API.",
+									"resultados": []
+								}
+							}
+						}
+					},
+					"406": {
+						"description": "Formato requisitado de resposta não aceito",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/df-resultado-vazio"
+								},
+								"example": {
+                                    "sucesso": false,
+                                    "mensagem": "Accept '{Accept}' não aceito",
+                                    "resultados": []
+                                }
+							}
+						}
+					},
+                    "500": {
+                        "description": "Erro interno",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/df-resultado-vazio"
+                                },
+                                "example": {
+                                    "sucesso": false,
+                                    "mensagem": "Erro interno. ${erro}",
+                                    "resultados": []
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/imagens/{nome}": {
+            "delete": {
+                "tags": ["imagens"],
+                "summary": "Apagar imagem compartimento",
+                "description": "Apagar uma imagem de compartimento",
+                "operationId": "apagar-imagem-compartimento",
+                "parameters": [{
+                    "name": "nome",
+                    "in": "path",
+                    "description": "Nome da imagem",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/df-resultado-vazio"
+                                },
+                                "example": {
+                                    "sucesso": true,
+                                    "mensagem": "Imagem apagada com sucesso",
+                                    "resultados": []
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Apikey inválido ou não informado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/df-resultado-vazio"
+                                },
+                                "example": {
+                                    "sucesso": false,
+                                    "mensagem": "Access denied due to missing subscription key. Make sure to include subscription key when making requests to an API.",
+                                    "resultados": []
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/df-resultado-vazio"
+                                },
+                                "example": {
+                                    "sucesso": false,
+                                    "mensagem": "Imagem não encontrada",
+                                    "resultados": []
+                                }
+                            }
+                        }
+                    },
+                    "406": {
+                        "description": "Formato requisitado de resposta não aceito",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/df-resultado-vazio"
+                                },
+                                "example": {
+                                    "sucesso": false,
+                                    "mensagem": "Accept '{Accept}' não aceito",
+                                    "resultados": []
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/df-resultado-vazio"
+                                },
+                                "example": {
+                                    "sucesso": false,
+                                    "mensagem": "Erro interno. ${erro}",
+                                    "resultados": []
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "df-resultado-vazio": {
+                "type": "object",
+                "properties": {
+                    "sucesso": {
+                        "type": "boolean",
+                        "description": "Flag indicando sucesso ou não"
+                    },
+                    "mensagem": {
+                        "type": "string",
+                        "description": "Mensagem de descrição do tipo do resultado obtido"
+                    },
+                    "resultados": {
+                        "type": "array",
+                        "items": {}
+                    }
+                }
+            },
+            "df-resultado-compartimento": {
+                "type": "object",
+                "properties": {
+                    "sucesso": {
+                        "type": "boolean",
+                        "description": "Flag indicando sucesso ou não"
+                    },
+                    "mensagem": {
+                        "type": "string",
+                        "description": "Mensagem de descrição do tipo do resultado obtido"
+                    },
+                    "resultados": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ref-compartimento"
+                        }
+                    }
+                }
+            },
+            "df-resultado-imagem": {
+                "type": "object",
+                "properties": {
+                    "sucesso": {
+                        "type": "boolean",
+                        "description": "Flag indicando sucesso ou não"
+                    },
+                    "mensagem": {
+                        "type": "string",
+                        "description": "Mensagem de descrição do tipo do resultado obtido"
+                    },
+                    "resultados": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ref-imagem"
+                        }
+                    }
+                }
+            },
+            "ref-imagem": {
+                "required": [
+                    "nome",
+                    "url_imagem"
+                ],
+                "type": "object",
+                "properties": {
+                    "nome": {
+                        "pattern": "^[\\w.]{3,}$",
+                        "type": "string",
+                        "description": "Nome da imagem"
+                    },
+                    "url_imagem": {
+                        "type": "string",
+                        "description": "Url da imagem no Firebase"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "ref-compartimento": {
+                "required": [
+                    "tipo",
+                    "capacidade",
+                    "preco",
+                    "qtd_adicionais",
+                    "qtd_sabores",
+                    "estoque",
+                    "url_imagem"
+                ],
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "string",
+                        "description": "Metadata do id do documento na collection"
+                    },
+                    "tipo": {
+                        "enum": [ "copo", "barca", "taça", "banana_split", "milk_shake" ],
+                        "type": "string",
+                        "description": "Tipo do compartimento"
+                    },
+                    "capacidade": {
+                        "type": "integer",
+                        "description": "Capacidade em ml do compartimento"
+                    },
+                    "preco": {
+                        "type": "number",
+                        "description": "Preço do compartimento"
+                    },
+                    "qtd_adicionais": {
+                        "type": "integer",
+                        "description": "Quantidade de adicionais do compartimento"
+                    },
+                    "qtd_sabores": {
+                        "type": "integer",
+                        "description": "Quantidade de sabores do compartimento"
+                    },
+                    "estoque": {
+                        "type": "boolean",
+                        "description": "Flag de estoque"
+                    },
+                    "url_imagem": {
+                        "type": "string",
+                        "description": "Url da imagem do compartimento no Firebase Storage"
+                    }
+                },
+                "additionalProperties": false
+            }
+        },
+        "securitySchemes": {
+            "apiKeyHeader": {
+                "type": "apiKey",
+                "name": "apikey",
+                "in": "header"
+            },
+            "apiKeyQuery": {
+                "type": "apiKey",
+                "name": "apikey",
+                "in": "query"
+            }
+        }
+    },
+    "security": [
+        {
+            "apiKeyHeader": []
+        },
+        {
+            "apiKeyQuery": []
+        }
+    ]
+}
